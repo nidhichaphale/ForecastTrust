@@ -42,12 +42,20 @@ export const ForecastDetailPage: React.FC = () => {
             The requested forecast ID ({forecastId}) could not be located in the current database.
           </p>
         </div>
-        <Link 
-          to="/forecasts" 
-          className="mt-4 flex items-center gap-2 bg-[#10213d] hover:bg-[#1a2e4c] text-sky-400 px-4 py-2 rounded-lg transition-colors border border-sky-900/30 text-sm font-medium"
-        >
-          <ArrowLeft className="w-4 h-4" /> Back to Forecast Explorer
-        </Link>
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
+          <Link 
+            to="/forecasts" 
+            className="flex items-center gap-2 bg-[#10213d] hover:bg-[#1a2e4c] text-sky-400 px-4 py-2 rounded-lg transition-colors border border-sky-900/30 text-sm font-medium"
+          >
+            <ArrowLeft className="w-4 h-4" /> Back to Forecast Explorer
+          </Link>
+          <Link 
+            to="/" 
+            className="flex items-center gap-2 bg-[#0b172a] hover:bg-[#10213d] text-slate-300 hover:text-white px-4 py-2 rounded-lg transition-colors border border-[#1a2e4c] text-sm font-medium"
+          >
+            Return to Dashboard
+          </Link>
+        </div>
       </div>
     )
   }

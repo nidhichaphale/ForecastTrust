@@ -71,4 +71,67 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #2b497c;
   }
+
+  /* UI Density support from Settings */
+  [data-density='compact'] table td,
+  [data-density='compact'] table th {
+    padding-top: 0.375rem !important;
+    padding-bottom: 0.375rem !important;
+  }
+
+  [data-density='compact'] .py-3 {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  [data-density='compact'] .py-4 {
+    padding-top: 0.625rem !important;
+    padding-bottom: 0.625rem !important;
+  }
+
+  /* Light Theme Accessibility Enhancements */
+  .light {
+    color-scheme: light;
+  }
+
+  .light .bg-\[\#060d19\] {
+    background-color: #f8fafc !important;
+  }
+
+  .light .bg-\[\#0b172a\] {
+    background-color: #ffffff !important;
+  }
+
+  .light .bg-\[\#07111f\] {
+    background-color: #f1f5f9 !important;
+  }
+
+  .light .bg-\[\#10213d\] {
+    background-color: #e2e8f0 !important;
+  }
+
+  .light .border-\[\#1a2e4c\] {
+    border-color: #cbd5e1 !important;
+  }
+
+  .light .text-slate-100,
+  .light .text-white {
+    color: #0f172a !important;
+  }
+
+  .light .text-slate-200 {
+    color: #1e293b !important;
+  }
+
+  .light .text-slate-300 {
+    color: #334155 !important;
+  }
+
+  .light .text-slate-400 {
+    color: #475569 !important;
+  }
+
+  .light .text-slate-500 {
+    color: #64748b !important;
+  }
 }

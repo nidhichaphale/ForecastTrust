@@ -53,7 +53,7 @@ export const LocationBustTable: React.FC<LocationBustTableProps> = ({ locations 
     setPage(1)
   }
 
-  const SortIcon = ({ k }: { k: SortKey }) =>
+  const renderSortIcon = (k: SortKey) =>
     sortKey === k
       ? sortDesc ? <ArrowDown className="w-3 h-3 inline ml-0.5 text-sky-400" /> : <ArrowUp className="w-3 h-3 inline ml-0.5 text-sky-400" />
       : <ArrowDown className="w-3 h-3 inline ml-0.5 opacity-20" />
@@ -85,19 +85,19 @@ export const LocationBustTable: React.FC<LocationBustTableProps> = ({ locations 
               <tr className="border-b border-[#1a2e4c]">
                 <th className="text-left px-5 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Location</th>
                 <th className="text-right px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer" onClick={() => handleSort('total')}>
-                  Fcsts <SortIcon k="total" />
+                  Fcsts {renderSortIcon('total')}
                 </th>
                 <th className="text-right px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer" onClick={() => handleSort('busts')}>
-                  Busts <SortIcon k="busts" />
+                  Busts {renderSortIcon('busts')}
                 </th>
                 <th className="text-right px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer" onClick={() => handleSort('bustRate')}>
-                  Rate <SortIcon k="bustRate" />
+                  Rate {renderSortIcon('bustRate')}
                 </th>
                 <th className="text-right px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer hidden md:table-cell" onClick={() => handleSort('avgAbsError')}>
-                  Avg |Err| <SortIcon k="avgAbsError" />
+                  Avg |Err| {renderSortIcon('avgAbsError')}
                 </th>
                 <th className="text-right px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer hidden lg:table-cell" onClick={() => handleSort('avgBustProb')}>
-                  Avg Prob <SortIcon k="avgBustProb" />
+                  Avg Prob {renderSortIcon('avgBustProb')}
                 </th>
                 <th className="text-right px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 hidden xl:table-cell">Latest Bust</th>
                 <th className="px-3 py-2.5"></th>

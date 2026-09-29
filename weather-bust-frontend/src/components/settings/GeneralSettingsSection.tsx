@@ -1,6 +1,6 @@
 import React from 'react'
 import { SettingField } from './SettingField'
-import { useSettings } from '../../context/SettingsContext'
+import { useSettings } from '../../hooks'
 import { type LandingWorkspace, type DefaultDateBehavior } from '../../types/settings'
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card'
 import { Compass, Calendar, Navigation, Globe } from 'lucide-react'

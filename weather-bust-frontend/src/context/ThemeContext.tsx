@@ -1,6 +1,6 @@
 import React from 'react'
 import { ThemeContext, type Theme } from './theme-context-def'
-import { useSettings } from './SettingsContext'
+import { useSettings } from '../hooks'
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { settings, updateAppearance } = useSettings()

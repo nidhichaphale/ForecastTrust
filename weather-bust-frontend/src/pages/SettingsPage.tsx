@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { useSettings } from '../context/SettingsContext'
+import { useSettings } from '../hooks'
 import {
   SettingsNav,
   type SettingsTabId,
@@ -58,7 +58,7 @@ export const SettingsPage: React.FC = () => {
               Workspace &bull; System Configuration
             </span>
             <span className="text-slate-500 text-xs">&bull;</span>
-            <span className="text-xs text-slate-400">Stage 15</span>
+            <span className="text-xs text-slate-400">System Preferences</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2.5">
             <Sliders className="w-6 h-6 text-sky-400" />

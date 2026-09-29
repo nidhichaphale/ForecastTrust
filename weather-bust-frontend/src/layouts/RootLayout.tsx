@@ -7,9 +7,9 @@ const PAGE_TITLES: Record<string, { title: string; crumb: string }> = {
   '/': { title: 'Dashboard', crumb: 'Overview' },
   '/dashboard': { title: 'Dashboard', crumb: 'Overview' },
   '/forecasts': { title: 'Forecast Explorer', crumb: 'Forecast' },
-  '/map': { title: 'Risk Overview / Spatial Map', crumb: 'Risk & Busts' },
-  '/risk-map': { title: 'Risk Overview / Spatial Map', crumb: 'Risk & Busts' },
-  '/risk-overview': { title: 'Risk Overview / Spatial Map', crumb: 'Risk & Busts' },
+  '/map': { title: 'Spatial Risk Map', crumb: 'Forecast' },
+  '/risk-map': { title: 'Spatial Risk Map', crumb: 'Forecast' },
+  '/risk-overview': { title: 'Spatial Risk Map', crumb: 'Forecast' },
   '/bust-detection': { title: 'Bust Detection', crumb: 'Risk & Busts' },
   '/hidden-risk': { title: 'Hidden Risk / Zero-Spread Monitoring', crumb: 'Risk & Busts' },
   '/analysis': { title: 'Verification & Analysis', crumb: 'Analysis' },
@@ -49,7 +49,7 @@ export const RootLayout: React.FC = () => {
         />
 
         {/* Dynamic Route Content */}
-        <main className="flex-1 w-full max-w-[1400px] mx-auto p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 w-full max-w-[1400px] mx-auto p-4 sm:p-6 lg:p-8 min-w-0 overflow-x-hidden">
           <Outlet />
         </main>
 
@@ -59,7 +59,7 @@ export const RootLayout: React.FC = () => {
             Weather Intelligence &mdash; Forecast Bust Detection &amp; Uncertainty Monitoring Platform
           </div>
           <div className="mt-1 sm:mt-0 flex items-center gap-4 text-[11px] text-slate-400">
-            <span>Stage 15 Settings &amp; System Workspace</span>
+            <span>Stage 17 Production Ready</span>
             <span className="text-slate-600">&bull;</span>
             <span className="text-emerald-400">Production Standalone UI</span>
           </div>

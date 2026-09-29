@@ -19,69 +19,75 @@ interface ZeroSpreadVsObservedChartProps {
   scatterData: HiddenRiskScatterPoint[]
 }
 
+interface TooltipProps {
+  active?: boolean
+  payload?: Array<{ payload: HiddenRiskScatterPoint }>
+}
+
+const CustomBarTooltip: React.FC<TooltipProps> = ({ active, payload }) => {
+  if (!active || !payload?.length) return null
+  const d = payload[0].payload
+  return (
+    <div className="bg-[#0b172a] border border-[#1a2e4c] rounded-lg px-3 py-2 text-xs shadow-xl min-w-[200px]">
+      <div className="font-semibold text-slate-100 mb-1">{d.locationName}</div>
+      <div className="text-slate-400 flex justify-between gap-4">
+        <span>Valid Date:</span> <span className="font-mono text-slate-200">{d.validDate} (D+{d.leadDay})</span>
+      </div>
+      <div className="text-slate-400 flex justify-between gap-4">
+        <span>Fcst Rain:</span> <span className="font-mono text-slate-200">{d.forecastRainfall} mm</span>
+      </div>
+      <div className="text-slate-400 flex justify-between gap-4">
+        <span>Observed Rain:</span>{' '}
+        <span className="font-mono font-bold text-amber-300">{d.observedRainfall} mm</span>
+      </div>
+      <div className="text-slate-400 flex justify-between gap-4">
+        <span>Ens Spread:</span> <span className="font-mono text-cyan-400">{d.ensembleSpread} mm</span>
+      </div>
+      <div className="border-t border-[#1a2e4c] mt-1.5 pt-1.5 flex justify-between gap-4">
+        <span className="font-semibold">Classification:</span>
+        <span
+          className={
+            d.isHiddenRiskBust
+              ? 'font-bold text-red-400'
+              : d.observedRainfall > 0
+              ? 'text-yellow-400'
+              : 'text-emerald-400'
+          }
+        >
+          {d.classification}
+        </span>
+      </div>
+    </div>
+  )
+}
+
+const CustomScatterTooltip: React.FC<TooltipProps> = ({ active, payload }) => {
+  if (!active || !payload?.length) return null
+  const d = payload[0].payload
+  return (
+    <div className="bg-[#0b172a] border border-[#1a2e4c] rounded-lg px-3 py-2 text-xs shadow-xl min-w-[190px]">
+      <div className="font-semibold text-slate-100">{d.locationName}</div>
+      <div className="text-slate-400 flex justify-between gap-4 mt-1">
+        <span>Ensemble Spread:</span> <span className="font-mono text-sky-400">{d.ensembleSpread} mm</span>
+      </div>
+      <div className="text-slate-400 flex justify-between gap-4">
+        <span>Absolute Error:</span>{' '}
+        <span className="font-mono font-bold text-red-400">{Math.abs(d.forecastError).toFixed(1)} mm</span>
+      </div>
+      <div className="text-slate-400 flex justify-between gap-4">
+        <span>Observed:</span> <span className="font-mono text-amber-300">{d.observedRainfall} mm</span>
+      </div>
+      <div className="mt-1 text-[11px] font-semibold text-slate-300">{d.classification}</div>
+    </div>
+  )
+}
+
 export const ZeroSpreadVsObservedChart: React.FC<ZeroSpreadVsObservedChartProps> = ({ scatterData }) => {
   const [viewMode, setViewMode] = useState<'chronological' | 'spread_vs_error'>('chronological')
 
   // Filter only zero-spread cases for chronological inspection
   const zeroSpreadPoints = scatterData.filter((p) => p.isZeroSpread)
 
-  const CustomBarTooltip: React.FC<any> = ({ active, payload }) => {
-    if (!active || !payload?.length) return null
-    const d = payload[0].payload as HiddenRiskScatterPoint
-    return (
-      <div className="bg-[#0b172a] border border-[#1a2e4c] rounded-lg px-3 py-2 text-xs shadow-xl min-w-[200px]">
-        <div className="font-semibold text-slate-100 mb-1">{d.locationName}</div>
-        <div className="text-slate-400 flex justify-between gap-4">
-          <span>Valid Date:</span> <span className="font-mono text-slate-200">{d.validDate} (D+{d.leadDay})</span>
-        </div>
-        <div className="text-slate-400 flex justify-between gap-4">
-          <span>Fcst Rain:</span> <span className="font-mono text-slate-200">{d.forecastRainfall} mm</span>
-        </div>
-        <div className="text-slate-400 flex justify-between gap-4">
-          <span>Observed Rain:</span>{' '}
-          <span className="font-mono font-bold text-amber-300">{d.observedRainfall} mm</span>
-        </div>
-        <div className="text-slate-400 flex justify-between gap-4">
-          <span>Ens Spread:</span> <span className="font-mono text-cyan-400">{d.ensembleSpread} mm</span>
-        </div>
-        <div className="border-t border-[#1a2e4c] mt-1.5 pt-1.5 flex justify-between gap-4">
-          <span className="font-semibold">Classification:</span>
-          <span
-            className={
-              d.isHiddenRiskBust
-                ? 'font-bold text-red-400'
-                : d.observedRainfall > 0
-                ? 'text-yellow-400'
-                : 'text-emerald-400'
-            }
-          >
-            {d.classification}
-          </span>
-        </div>
-      </div>
-    )
-  }
-
-  const CustomScatterTooltip: React.FC<any> = ({ active, payload }) => {
-    if (!active || !payload?.length) return null
-    const d = payload[0].payload as HiddenRiskScatterPoint
-    return (
-      <div className="bg-[#0b172a] border border-[#1a2e4c] rounded-lg px-3 py-2 text-xs shadow-xl min-w-[190px]">
-        <div className="font-semibold text-slate-100">{d.locationName}</div>
-        <div className="text-slate-400 flex justify-between gap-4 mt-1">
-          <span>Ensemble Spread:</span> <span className="font-mono text-sky-400">{d.ensembleSpread} mm</span>
-        </div>
-        <div className="text-slate-400 flex justify-between gap-4">
-          <span>Absolute Error:</span>{' '}
-          <span className="font-mono font-bold text-red-400">{Math.abs(d.forecastError).toFixed(1)} mm</span>
-        </div>
-        <div className="text-slate-400 flex justify-between gap-4">
-          <span>Observed:</span> <span className="font-mono text-amber-300">{d.observedRainfall} mm</span>
-        </div>
-        <div className="mt-1 text-[11px] font-semibold text-slate-300">{d.classification}</div>
-      </div>
-    )
-  }
 
   return (
     <Card>

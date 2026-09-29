@@ -14,6 +14,7 @@ interface ExplorerTableProps {
   sortDesc: boolean
   onSort: (field: SortField) => void
   onRowClick: (forecast: Forecast) => void
+  onResetFilters?: () => void
 }
 
 const RISK_LABEL: Record<RiskLevel, string> = {
@@ -34,6 +35,7 @@ export const ExplorerTable: React.FC<ExplorerTableProps> = ({
   sortDesc,
   onSort,
   onRowClick,
+  onResetFilters,
 }) => {
   const handleHeaderClick = (field: SortField) => {
     onSort(field)
@@ -160,8 +162,19 @@ export const ExplorerTable: React.FC<ExplorerTableProps> = ({
               ) : (
                 <tr>
                   <td colSpan={12} className="px-4 py-12 text-center">
-                    <p className="text-slate-400 font-medium mb-1">No forecasts match the selected filters.</p>
-                    <p className="text-xs text-slate-500">Try adjusting the date, location, risk, or lead-day filters.</p>
+                    <p className="text-slate-300 font-semibold mb-1">No forecasts match the selected filters</p>
+                    <p className="text-xs text-slate-400 mb-3 max-w-sm mx-auto">
+                      No forecast records were found matching your current filter combination.
+                    </p>
+                    {onResetFilters && (
+                      <button
+                        type="button"
+                        onClick={onResetFilters}
+                        className="px-3.5 py-1.5 rounded-lg bg-sky-500/15 border border-sky-500/30 text-sky-400 hover:bg-sky-500/25 text-xs font-medium transition-colors"
+                      >
+                        Reset All Filters
+                      </button>
+                    )}
                   </td>
                 </tr>
               )}

@@ -1,11 +1,20 @@
 import React, { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Compass, Map, AlertTriangle, EyeOff, BarChart3, Database } from 'lucide-react'
-
 import { getForecasts, getLocations, getRegions } from '../mock'
 import { getMockValidDates } from '../mock/mapHelpers'
 import { useUrlFilters } from '../hooks/useUrlFilters'
 import type { ForecastFilterParams, RegionId } from '../types'
+import { AnalysisHeader } from '../components/analysis/AnalysisHeader'
+import { AnalysisFilterBar } from '../components/analysis/AnalysisFilterBar'
+import { AnalysisTabNav, type AnalysisTabId } from '../components/analysis/AnalysisTabNav'
+
+import { VerificationOverviewTab } from '../components/analysis/VerificationOverviewTab'
+import { ErrorAnalysisTab } from '../components/analysis/ErrorAnalysisTab'
+import { LeadDayAnalysisTab } from '../components/analysis/LeadDayAnalysisTab'
+import { RegionalAnalysisTab } from '../components/analysis/RegionalAnalysisTab'
+import { HistoricalAnalysisTab } from '../components/analysis/HistoricalAnalysisTab'
+import { ModelPerformanceTab } from '../components/analysis/ModelPerformanceTab'
+import { FeatureInsightsTab } from '../components/analysis/FeatureInsightsTab'
 
 import {
   calculateVerificationSummary,
@@ -19,32 +28,10 @@ import {
   getHistoricalVerificationData,
 } from '../utils/verificationAnalysis'
 
-import { WorkspaceSubNav, type WorkspaceTab } from '../components/navigation/WorkspaceSubNav'
-import { AnalysisHeader } from '../components/analysis/AnalysisHeader'
-import { AnalysisFilterBar } from '../components/analysis/AnalysisFilterBar'
-import { AnalysisTabNav, type AnalysisTabId } from '../components/analysis/AnalysisTabNav'
-
-import { VerificationOverviewTab } from '../components/analysis/VerificationOverviewTab'
-import { ErrorAnalysisTab } from '../components/analysis/ErrorAnalysisTab'
-import { LeadDayAnalysisTab } from '../components/analysis/LeadDayAnalysisTab'
-import { RegionalAnalysisTab } from '../components/analysis/RegionalAnalysisTab'
-import { HistoricalAnalysisTab } from '../components/analysis/HistoricalAnalysisTab'
-import { ModelPerformanceTab } from '../components/analysis/ModelPerformanceTab'
-import { FeatureInsightsTab } from '../components/analysis/FeatureInsightsTab'
-
 // Stable static references
 const ALL_DATES = getMockValidDates()
 const ALL_REGIONS = getRegions().map((r) => r.name)
 const LEAD_DAYS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
-const WORKSPACE_TABS: WorkspaceTab[] = [
-  { label: 'Forecast Explorer', path: '/forecasts', icon: Compass },
-  { label: 'Risk Map', path: '/map', icon: Map },
-  { label: 'Bust Detection', path: '/bust-detection', icon: AlertTriangle },
-  { label: 'Hidden Risk', path: '/hidden-risk', icon: EyeOff },
-  { label: 'Verification & Analysis', path: '/analysis', icon: BarChart3 },
-  { label: 'Data & Quality', path: '/data', icon: Database },
-]
 
 export const VerificationAnalysisPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -100,12 +87,6 @@ export const VerificationAnalysisPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Workspace Unified Sub-Nav */}
-      <WorkspaceSubNav
-        workspaceTitle="Verification & Analysis Workspace"
-        workspaceDescription="Comprehensive meteorological verification suite covering systematic error bias, lead-time degradation, regional performance, model benchmark comparison, and feature importance."
-        tabs={WORKSPACE_TABS}
-      />
 
       {/* Workspace Header & Scope Status */}
       <AnalysisHeader

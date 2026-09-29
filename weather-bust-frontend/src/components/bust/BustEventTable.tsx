@@ -169,7 +169,12 @@ export const BustEventTable: React.FC<BustEventTableProps> = ({ events, onSelect
             </thead>
             <tbody>
               {shown.length === 0 ? (
-                <tr><td colSpan={9} className="px-5 py-6 text-center text-slate-500">No bust events match the current filters.</td></tr>
+                <tr>
+                  <td colSpan={9} className="px-5 py-10 text-center">
+                    <p className="text-slate-300 font-semibold mb-1">No bust events match the current filters</p>
+                    <p className="text-xs text-slate-500">All forecasts within this scope verified within normal bounds, or try clearing filters.</p>
+                  </td>
+                </tr>
               ) : shown.map((ev) => (
                 <React.Fragment key={ev.id}>
                   <tr

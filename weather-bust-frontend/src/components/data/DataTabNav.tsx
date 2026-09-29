@@ -19,7 +19,7 @@ const TABS: { id: DataTabId; label: string; icon: React.ComponentType<{ classNam
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
   { id: 'coverage', label: 'Coverage Breakdown', icon: Globe2 },
   { id: 'quality', label: 'Quality & Audit', icon: CheckCircle2 },
-  { id: 'explorer', label: 'Data Explorer', icon: Database },
+  { id: 'explorer', label: 'Record Audit Catalog', icon: Database },
   { id: 'availability', label: 'Availability Matrix', icon: Grid },
 ]
 

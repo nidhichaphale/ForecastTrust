@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { getMapForecasts, getMockValidDates, type MapForecast } from '../mock/mapHelpers'
 import { getRegions, getLocations, getForecasts } from '../mock'
 import type { ForecastFilterParams, RegionId, Forecast } from '../types'
@@ -31,9 +31,6 @@ export const ForecastRiskMapPage: React.FC = () => {
   // Map reset trigger (increment to fire IndiaViewReset)
   const [resetTrigger, setResetTrigger] = useState(0)
 
-  // Selected forecast (for the panel)
-  const [selected, setSelected] = useState<MapForecast | null>(null)
-
   // Drawer state for fast deep-dive inspection
   const [drawerForecast, setDrawerForecast] = useState<Forecast | null>(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -64,13 +61,17 @@ export const ForecastRiskMapPage: React.FC = () => {
     }
   }, [mapForecasts, riskMetrics])
 
+  const [searchParams] = useSearchParams()
+  const locIdParam = searchParams.get('locationId')
+  const [selectedId, setSelectedId] = useState<string | null>(locIdParam)
+
   const handleSelect = useCallback((fc: MapForecast) => {
-    setSelected(fc)
+    setSelectedId(fc.locationId)
   }, [])
 
   const handleReset = () => {
     setFilters({ startDate: DEFAULT_DATE, endDate: DEFAULT_DATE })
-    setSelected(null)
+    setSelectedId(null)
     setResetTrigger((t) => t + 1)
   }
 
@@ -79,16 +80,12 @@ export const ForecastRiskMapPage: React.FC = () => {
   const selectedLeadLabel = filters.leadDay ? `D+${filters.leadDay}` : 'All Lead Days'
   const selectedRegionLabel = filters.region ?? 'All Regions'
 
-  const [searchParams] = useSearchParams()
-
-  // Auto-select location from URL if present
-  useEffect(() => {
-    const locId = searchParams.get('locationId')
-    if (locId && mapForecasts.length > 0) {
-      const match = mapForecasts.find((f) => f.locationId === locId)
-      if (match) setSelected(match)
-    }
-  }, [searchParams, mapForecasts])
+  // Active selected forecast: manual click takes precedence, fallback to URL param
+  const activeSelected = useMemo(() => {
+    const targetId = selectedId ?? locIdParam
+    if (!targetId) return null
+    return mapForecasts.find((f) => f.locationId === targetId || f.id === targetId) ?? null
+  }, [selectedId, locIdParam, mapForecasts])
 
   return (
     <div className="flex flex-col gap-4 h-full">
@@ -98,7 +95,7 @@ export const ForecastRiskMapPage: React.FC = () => {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Risk Overview &amp; Spatial Risk Map</h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Spatial Risk Map</h1>
           <p className="text-sm text-slate-400 mt-0.5">
             Geographic view of forecast risk, uncertainty, and potential busts across monitored locations.
           </p>
@@ -161,7 +158,7 @@ export const ForecastRiskMapPage: React.FC = () => {
           ) : (
             <RiskMap
               forecasts={mapForecasts}
-              selectedId={selected?.id ?? null}
+              selectedId={activeSelected?.id ?? null}
               onSelect={handleSelect}
               resetTrigger={resetTrigger}
             />
@@ -174,11 +171,11 @@ export const ForecastRiskMapPage: React.FC = () => {
         </div>
 
         {/* Selected Location Panel */}
-        {selected && (
+        {activeSelected && (
           <div className="w-72 shrink-0 hidden lg:block">
             <MapLocationPanel
-              forecast={selected}
-              onClose={() => setSelected(null)}
+              forecast={activeSelected}
+              onClose={() => setSelectedId(null)}
               onInspect={(fc) => {
                 setDrawerForecast(fc)
                 setIsDrawerOpen(true)
@@ -189,11 +186,11 @@ export const ForecastRiskMapPage: React.FC = () => {
       </div>
 
       {/* Mobile selected panel (bottom) */}
-      {selected && (
+      {activeSelected && (
         <div className="lg:hidden">
           <MapLocationPanel
-            forecast={selected}
-            onClose={() => setSelected(null)}
+            forecast={activeSelected}
+            onClose={() => setSelectedId(null)}
             onInspect={(fc) => {
               setDrawerForecast(fc)
               setIsDrawerOpen(true)

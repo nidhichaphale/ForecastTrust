@@ -37,7 +37,7 @@ export const RiskWorkspaceNav: React.FC<RiskWorkspaceNavProps> = ({
 
   const views = [
     {
-      label: 'Risk Overview / Spatial Map',
+      label: 'Spatial Risk Map',
       path: '/map',
       icon: Map,
       isActive: isMapActive,

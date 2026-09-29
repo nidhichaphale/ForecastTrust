@@ -260,8 +260,9 @@ export const HiddenRiskCasesTable: React.FC<HiddenRiskCasesTableProps> = ({ case
             <tbody>
               {shown.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="px-5 py-8 text-center text-slate-500">
-                    No hidden-risk candidates match the current filters.
+                  <td colSpan={10} className="px-5 py-10 text-center">
+                    <p className="text-slate-300 font-semibold mb-1">No hidden-risk candidates match the current filters</p>
+                    <p className="text-xs text-slate-500">All zero-spread and trace-forecast scenarios within this range verified accurately.</p>
                   </td>
                 </tr>
               ) : (

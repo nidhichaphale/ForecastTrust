@@ -113,15 +113,15 @@ export const SystemInfoSection: React.FC = () => {
             <div className="p-3.5 rounded-xl bg-[#060d19] border border-[#1a2e4c]">
               <div className="text-[11px] text-slate-400">Software Stage</div>
               <div className="text-xs font-semibold text-sky-400 mt-1">
-                Stage 15 — Settings / System
+                Stage 16 — Responsive + UX Polish
               </div>
-              <div className="text-[10px] text-slate-500 mt-0.5">Consolidated Workspace Suite</div>
+              <div className="text-[10px] text-slate-500 mt-0.5">Production Intelligence Suite</div>
             </div>
 
             <div className="p-3.5 rounded-xl bg-[#060d19] border border-[#1a2e4c]">
               <div className="text-[11px] text-slate-400">Application Version</div>
               <div className="text-xs font-semibold font-mono text-emerald-400 mt-1">
-                v1.15.0-standalone
+                v1.16.0-standalone
               </div>
               <div className="text-[10px] text-slate-500 mt-0.5">Production Client Bundle</div>
             </div>

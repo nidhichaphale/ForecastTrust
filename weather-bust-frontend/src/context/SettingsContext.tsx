@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   type UserSettings,
   type GeneralSettings,
@@ -8,22 +8,9 @@ import {
   type NotificationSettings,
   DEFAULT_USER_SETTINGS,
 } from '../types/settings'
+import { SettingsContext } from './settings-context-def'
 
 const SETTINGS_STORAGE_KEY = 'weather_intelligence_settings_v1'
-
-export interface SettingsContextType {
-  settings: UserSettings
-  updateGeneral: (patch: Partial<GeneralSettings>) => void
-  updateAppearance: (patch: Partial<AppearanceSettings>) => void
-  updateForecastRisk: (patch: Partial<ForecastRiskSettings>) => void
-  updateDataAnalysis: (patch: Partial<DataAnalysisSettings>) => void
-  updateNotifications: (patch: Partial<NotificationSettings>) => void
-  resetSettings: () => void
-  isModifiedFromDefaults: boolean
-  lastSaved: Date | null
-}
-
-const SettingsContext = createContext<SettingsContextType | undefined>(undefined)
 
 /**
  * Safely merge stored settings with default settings to prevent undefined properties on schema updates.
@@ -78,11 +65,10 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
 
-  // Save to localStorage whenever settings state changes
+  // Save to localStorage whenever settings state changes (pure synchronization, no setLastSaved inside)
   useEffect(() => {
     try {
       localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings))
-      setLastSaved(new Date())
     } catch (e) {
       console.error('Failed to persist user settings to localStorage:', e)
     }
@@ -128,6 +114,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       ...prev,
       general: { ...prev.general, ...patch },
     }))
+    setLastSaved(new Date())
   }, [])
 
   const updateAppearance = useCallback((patch: Partial<AppearanceSettings>) => {
@@ -135,6 +122,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       ...prev,
       appearance: { ...prev.appearance, ...patch },
     }))
+    setLastSaved(new Date())
   }, [])
 
   const updateForecastRisk = useCallback((patch: Partial<ForecastRiskSettings>) => {
@@ -142,6 +130,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       ...prev,
       forecastRisk: { ...prev.forecastRisk, ...patch },
     }))
+    setLastSaved(new Date())
   }, [])
 
   const updateDataAnalysis = useCallback((patch: Partial<DataAnalysisSettings>) => {
@@ -149,6 +138,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       ...prev,
       dataAnalysis: { ...prev.dataAnalysis, ...patch },
     }))
+    setLastSaved(new Date())
   }, [])
 
   const updateNotifications = useCallback((patch: Partial<NotificationSettings>) => {
@@ -156,6 +146,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       ...prev,
       notifications: { ...prev.notifications, ...patch },
     }))
+    setLastSaved(new Date())
   }, [])
 
   const resetSettings = useCallback(() => {
@@ -185,12 +176,4 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       {children}
     </SettingsContext.Provider>
   )
-}
-
-export function useSettings(): SettingsContextType {
-  const context = useContext(SettingsContext)
-  if (!context) {
-    throw new Error('useSettings must be used within a SettingsProvider')
-  }
-  return context
 }

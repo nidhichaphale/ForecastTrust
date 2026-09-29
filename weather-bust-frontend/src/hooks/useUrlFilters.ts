@@ -12,8 +12,9 @@ export function useUrlFilters<T extends ForecastFilterParams>(defaultFilters: T 
 
   // Parse search parameters into filter object — stable string dependency
   const parsedFromUrl = useMemo<Partial<T>>(() => {
+    const params = new URLSearchParams(searchString)
     const parsed: Record<string, any> = {}
-    for (const [key, val] of searchParams.entries()) {
+    for (const [key, val] of params.entries()) {
       if (val !== '' && val !== 'all') {
         if (key === 'leadDay') {
           const num = parseInt(val, 10)

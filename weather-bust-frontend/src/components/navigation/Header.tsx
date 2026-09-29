@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Menu,
   Search,
@@ -8,11 +10,11 @@ import {
   Activity,
   Settings as SettingsIcon,
 } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import { IconButton } from '../ui/IconButton'
 import { StatusIndicator } from '../ui/StatusIndicator'
 import { useTheme } from '../../hooks/useTheme'
 import { NotificationMenu } from './NotificationMenu'
+import { GlobalSearchDialog } from './GlobalSearchDialog'
 
 export interface HeaderProps {
   onOpenMobileMenu: () => void
@@ -26,6 +28,19 @@ export const Header: React.FC<HeaderProps> = ({
   breadcrumb = 'Overview',
 }) => {
   const { theme, toggleTheme } = useTheme()
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+
+  // Listen to Ctrl+K / Cmd+K globally
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setIsSearchOpen((prev) => !prev)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   return (
     <header className="h-16 px-4 sm:px-6 lg:px-8 border-b border-[#1a2e4c] bg-[#0b172a]/90 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between gap-4">
@@ -55,18 +70,30 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Center: Search Field (Visual placeholder ready for later stages) */}
+      {/* Center: Search Field */}
       <div className="hidden md:flex items-center max-w-sm w-full mx-4">
-        <div className="relative w-full">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => setIsSearchOpen(true)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              setIsSearchOpen(true)
+            }
+          }}
+          className="relative w-full cursor-pointer group"
+          aria-label="Search forecasts, stations, models (Ctrl+K)"
+        >
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-hover:text-sky-400 transition-colors pointer-events-none">
             <Search className="w-4 h-4" />
           </div>
           <input
             type="text"
             readOnly
-            placeholder="Search forecasts, models, lead days... (Ctrl+K)"
-            aria-label="Search forecasts, models, lead days"
-            className="w-full h-9 pl-9 pr-12 rounded-lg bg-[#060d19] border border-[#1a2e4c] text-xs text-slate-300 placeholder:text-slate-500 focus:outline-none focus:border-sky-500/60 cursor-pointer hover:border-slate-700 transition-colors"
+            placeholder="Search stations, forecasts, alerts... (Ctrl+K)"
+            aria-label="Search stations, forecasts, alerts"
+            className="w-full h-9 pl-9 pr-12 rounded-lg bg-[#060d19] border border-[#1a2e4c] text-xs text-slate-300 placeholder:text-slate-500 focus:outline-none focus:border-sky-500/60 cursor-pointer group-hover:border-slate-600 transition-colors"
           />
           <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700/60 pointer-events-none font-mono">
             ⌘K
@@ -75,7 +102,16 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Right: Actions, Notifications, Theme Toggle & Profile */}
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        {/* Mobile Search Button */}
+        <div className="md:hidden">
+          <IconButton
+            icon={<Search className="w-4 h-4 text-slate-300" />}
+            aria-label="Search platform"
+            onClick={() => setIsSearchOpen(true)}
+          />
+        </div>
+
         {/* System Health Status Indicator */}
         <div className="hidden xl:flex items-center gap-2 px-3 py-1 rounded-full bg-[#10213d] border border-[#1a2e4c] text-xs">
           <Activity className="w-3.5 h-3.5 text-emerald-400" />
@@ -129,6 +165,9 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </Link>
       </div>
+
+      {/* Global Command Palette Search Modal */}
+      <GlobalSearchDialog isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </header>
   )
 }

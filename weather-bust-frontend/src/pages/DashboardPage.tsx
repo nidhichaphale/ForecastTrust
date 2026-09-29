@@ -20,7 +20,7 @@ import { ModelPerformanceSnapshot } from '../components/dashboard/ModelPerforman
 import { AlertsSnapshot } from '../components/dashboard/AlertsSnapshot'
 import { RegionalRiskSummary } from '../components/dashboard/RegionalRiskSummary'
 import { ForecastOperationalSummary } from '../components/dashboard/ForecastOperationalSummary'
-import { useAlerts } from '../context/AlertsContext'
+import { useAlerts } from '../hooks'
 import {
   ForecastDetailModal,
   type DetailRecord,
@@ -100,21 +100,29 @@ export const DashboardPage: React.FC = () => {
   const modelMetrics = useMemo(() => getModelMetrics(), [])
   const dqStats = useMemo(() => getDataQualityStats(), [])
 
-  const highRiskForecasts = useMemo(
+  const allHighRiskForecasts = useMemo(
     () =>
       getForecasts({ riskLevel: 'high' })
         .concat(getForecasts({ riskLevel: 'severe' }))
-        .sort((a, b) => b.bustProbability - a.bustProbability)
-        .slice(0, 20),
+        .sort((a, b) => b.bustProbability - a.bustProbability),
+    []
+  )
+
+  const highRiskPreview = useMemo(
+    () => allHighRiskForecasts.slice(0, 8),
+    [allHighRiskForecasts]
+  )
+
+  const allBusts = useMemo(
+    () =>
+      getBustEvents()
+        .sort((a, b) => (b.validDate > a.validDate ? 1 : -1)),
     []
   )
 
   const recentBusts = useMemo(
-    () =>
-      getBustEvents()
-        .sort((a, b) => (b.validDate > a.validDate ? 1 : -1))
-        .slice(0, 12),
-    []
+    () => allBusts.slice(0, 6),
+    [allBusts]
   )
 
   const { alerts } = useAlerts()
@@ -144,11 +152,11 @@ export const DashboardPage: React.FC = () => {
     {
       id: 'high-risk',
       label: 'High-Risk Locations',
-      value: highRiskForecasts.length,
+      value: allHighRiskForecasts.length,
       supporting: 'requiring attention',
       icon: AlertTriangle,
       iconColor: 'text-orange-400',
-      riskLevel: highRiskForecasts.length > 10 ? 'high' : 'moderate',
+      riskLevel: allHighRiskForecasts.length > 10 ? 'high' : 'moderate',
       delta: { value: 'elevated', direction: 'up' },
     },
     {
@@ -221,7 +229,7 @@ export const DashboardPage: React.FC = () => {
     },
     {
       label: 'High-Risk Alerts',
-      value: highRiskForecasts.length,
+      value: allHighRiskForecasts.length,
       icon: AlertTriangle,
       iconClass: 'text-orange-400',
     },
@@ -323,19 +331,19 @@ export const DashboardPage: React.FC = () => {
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
               High-Risk Locations
             </span>
-            <Badge variant="high" size="sm">{highRiskForecasts.length} records</Badge>
+            <Badge variant="high" size="sm">Top {highRiskPreview.length} of {allHighRiskForecasts.length}</Badge>
           </div>
           <button
             type="button"
             onClick={() => navigate('/map')}
             className="text-xs text-sky-400 hover:text-sky-300 font-medium flex items-center gap-1 transition-colors"
           >
-            <span>View on Risk Map</span>
+            <span>View all on Risk Map</span>
             <ArrowRight className="w-3 h-3" />
           </button>
         </div>
         <HighRiskLocations
-          forecasts={highRiskForecasts}
+          forecasts={highRiskPreview}
           onRowClick={handleForecastClick}
         />
       </section>
@@ -348,14 +356,14 @@ export const DashboardPage: React.FC = () => {
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
                 Recent Bust Events
               </span>
-              <Badge variant="severe" size="sm">{recentBusts.length} verified</Badge>
+              <Badge variant="severe" size="sm">Latest {recentBusts.length} of {allBusts.length}</Badge>
             </div>
             <button
               type="button"
               onClick={() => navigate('/bust-detection')}
               className="text-xs text-sky-400 hover:text-sky-300 font-medium flex items-center gap-1 transition-colors"
             >
-              <span>Investigate in Bust Detection</span>
+              <span>Investigate all in Bust Detection</span>
               <ArrowRight className="w-3 h-3" />
             </button>
           </div>

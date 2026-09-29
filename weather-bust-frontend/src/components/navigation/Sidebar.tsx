@@ -72,12 +72,6 @@ const WORKSPACE_SECTIONS: WorkspaceSection[] = [
     defaultOpen: true,
     items: [
       {
-        label: 'Risk Overview',
-        path: '/map',
-        icon: Map,
-        isAvailable: true,
-      },
-      {
         label: 'Bust Detection',
         path: '/bust-detection',
         icon: AlertTriangle,
@@ -176,6 +170,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const toggleSection = (sectionId: string) => {
     setExpandedSections((prev) => ({ ...prev, [sectionId]: !prev[sectionId] }))
   }
+
+  // Close mobile sidebar on Escape key
+  useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
 
   return (
     <>

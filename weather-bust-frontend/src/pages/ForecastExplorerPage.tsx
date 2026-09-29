@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo } from 'react'
 import { getForecasts, getRegions, getLocations } from '../mock'
 import type { ForecastFilterParams, Forecast, RegionId } from '../types'
 
@@ -57,10 +57,10 @@ export const ForecastExplorerPage: React.FC = () => {
     return sortedForecasts.slice(start, start + pageSize)
   }, [sortedForecasts, page, pageSize])
 
-  // Reset page to 1 when filters change
-  useEffect(() => {
+  const handleFilterChange: React.Dispatch<React.SetStateAction<ForecastFilterParams>> = (newFilters) => {
+    setFilters(newFilters)
     setPage(1)
-  }, [filters, pageSize])
+  }
 
   // -- Summary Stats --
   const summaryStats = useMemo(() => {
@@ -127,7 +127,7 @@ export const ForecastExplorerPage: React.FC = () => {
       {/* Filters */}
       <ExplorerFilters 
         filters={filters}
-        setFilters={setFilters}
+        setFilters={handleFilterChange}
         availableRegions={availableRegions}
         availableStates={availableStates}
         availableLeadDays={availableLeadDays}
@@ -140,6 +140,7 @@ export const ForecastExplorerPage: React.FC = () => {
         sortDesc={sortDesc}
         onSort={handleSort}
         onRowClick={handleRowClick}
+        onResetFilters={() => handleFilterChange({})}
       />
 
       {/* Pagination */}

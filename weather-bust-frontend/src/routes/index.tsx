@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { RootLayout } from '../layouts/RootLayout'
 import { DashboardPage } from '../pages/DashboardPage'
 import { ForecastExplorerPage } from '../pages/ForecastExplorerPage'
@@ -44,11 +44,11 @@ export const router = createBrowserRouter([
       },
       {
         path: 'risk-map',
-        element: <ForecastRiskMapPage />,
+        element: <Navigate to="/map" replace />,
       },
       {
         path: 'risk-overview',
-        element: <ForecastRiskMapPage />,
+        element: <Navigate to="/map" replace />,
       },
       {
         path: 'bust-detection',
@@ -64,7 +64,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'verification',
-        element: <VerificationAnalysisPage />,
+        element: <Navigate to="/analysis" replace />,
       },
       {
         path: 'data',

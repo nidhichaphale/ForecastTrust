@@ -1,14 +1,5 @@
 import React, { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import {
-  Compass,
-  Map,
-  AlertTriangle,
-  EyeOff,
-  BarChart3,
-  Database,
-} from 'lucide-react'
-
 import { getForecasts, getLocations, getRegions } from '../mock'
 import { getMockValidDates } from '../mock/mapHelpers'
 import { useUrlFilters } from '../hooks/useUrlFilters'
@@ -24,8 +15,6 @@ import {
   extractQualityIssues,
   calculateAvailabilityGrid,
 } from '../utils/dataQualityAnalysis'
-
-import { WorkspaceSubNav, type WorkspaceTab } from '../components/navigation/WorkspaceSubNav'
 import { DataHeader } from '../components/data/DataHeader'
 import { DataFilterBar } from '../components/data/DataFilterBar'
 import { DataTabNav } from '../components/data/DataTabNav'
@@ -40,15 +29,6 @@ import { AvailabilityViewTab } from '../components/data/AvailabilityViewTab'
 const ALL_DATES = getMockValidDates()
 const ALL_REGIONS = getRegions().map((r) => r.name)
 const LEAD_DAYS = [1, 2, 3, 4, 5, 7, 10]
-
-const WORKSPACE_TABS: WorkspaceTab[] = [
-  { label: 'Forecast Explorer', path: '/forecasts', icon: Compass },
-  { label: 'Risk Map', path: '/map', icon: Map },
-  { label: 'Bust Detection', path: '/bust-detection', icon: AlertTriangle },
-  { label: 'Hidden Risk', path: '/hidden-risk', icon: EyeOff },
-  { label: 'Verification & Analysis', path: '/analysis', icon: BarChart3 },
-  { label: 'Data & Quality', path: '/data', icon: Database },
-]
 
 export const DataQualityPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -101,12 +81,6 @@ export const DataQualityPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Workspace Unified Sub-Nav */}
-      <WorkspaceSubNav
-        workspaceTitle="Data &amp; Quality Workspace"
-        workspaceDescription="Comprehensive operational data inventory: monitor ground-truth observation availability, telemetry latency, spatial coverage across subdivisions, and dataset integrity."
-        tabs={WORKSPACE_TABS}
-      />
 
       {/* Workspace Header & Scope Status */}
       <DataHeader

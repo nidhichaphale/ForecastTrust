@@ -1,6 +1,6 @@
 import React from 'react'
 import { SettingField } from './SettingField'
-import { useSettings } from '../../context/SettingsContext'
+import { useSettings } from '../../hooks'
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card'
 import { Palette, Moon, Sun, Monitor, Check } from 'lucide-react'
 

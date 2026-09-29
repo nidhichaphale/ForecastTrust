@@ -177,16 +177,21 @@ export const FeatureInsightsTab: React.FC<FeatureInsightsTabProps> = ({ features
                     <div className="text-[10px] text-slate-500 font-mono">{feat.featureName}</div>
                   </td>
                   <td className="px-4 py-3 font-sans">
-                    <span
-                      className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium border"
-                      style={{
-                        color: CATEGORY_COLORS[feat.category] || '#94a3b8',
-                        borderColor: `${CATEGORY_COLORS[feat.category]}40` || '#334155',
-                        backgroundColor: `${CATEGORY_COLORS[feat.category]}15` || '#1e293b',
-                      }}
-                    >
-                      {CATEGORY_LABELS[feat.category] || feat.category}
-                    </span>
+                    {(() => {
+                      const catColor = CATEGORY_COLORS[feat.category] || '#94a3b8'
+                      return (
+                        <span
+                          className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium border"
+                          style={{
+                            color: catColor,
+                            borderColor: `${catColor}40`,
+                            backgroundColor: `${catColor}15`,
+                          }}
+                        >
+                          {CATEGORY_LABELS[feat.category] || feat.category}
+                        </span>
+                      )
+                    })()}
                   </td>
                   <td className="px-4 py-3 text-right font-semibold text-cyan-400">
                     {feat.importanceScore.toFixed(3)}

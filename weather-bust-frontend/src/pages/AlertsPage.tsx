@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { useAlerts } from '../context/AlertsContext'
+import { useAlerts } from '../hooks'
 import type { Alert, AlertFilterParams, RegionId, AlertStatus, RiskLevel } from '../types'
 import { getRegions, getLocations } from '../mock'
 import {
@@ -30,21 +30,17 @@ export const AlertsPage: React.FC = () => {
 
   const [activeQuickView, setActiveQuickView] = useState<AlertQuickViewKey>('all')
 
-  // Drawer state for investigation
-  const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null)
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const alertIdParam = searchParams.get('alertId')
+  const [selectedAlertId, setSelectedAlertId] = useState<string | null>(alertIdParam)
 
-  // Auto-open alert from URL query param if present
-  useEffect(() => {
-    const alertId = searchParams.get('alertId')
-    if (alertId) {
-      const match = getAlertById(alertId)
-      if (match) {
-        setSelectedAlert(match)
-        setIsDrawerOpen(true)
-      }
-    }
-  }, [searchParams, getAlertById])
+  // Derive active alert: user selection takes precedence, fallback to URL parameter
+  const selectedAlert = useMemo(() => {
+    const id = selectedAlertId ?? alertIdParam
+    if (!id) return null
+    return getAlertById(id) ?? null
+  }, [selectedAlertId, alertIdParam, getAlertById])
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(Boolean(alertIdParam))
 
   // Available regions & states
   const availableRegions = useMemo(() => getRegions().map((r) => r.name), [])
@@ -132,7 +128,7 @@ export const AlertsPage: React.FC = () => {
   }
 
   const handleSelectAlert = (alt: Alert) => {
-    setSelectedAlert(alt)
+    setSelectedAlertId(alt.id)
     setIsDrawerOpen(true)
   }
 
@@ -200,8 +196,16 @@ export const AlertsPage: React.FC = () => {
       {/* Reusable Investigation Drawer */}
       <AlertInvestigationDrawer
         alert={selectedAlert}
-        isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
+        isOpen={isDrawerOpen && selectedAlert !== null}
+        onClose={() => {
+          setIsDrawerOpen(false)
+          setSelectedAlertId(null)
+          if (alertIdParam) {
+            const next = new URLSearchParams(searchParams)
+            next.delete('alertId')
+            setSearchParams(next)
+          }
+        }}
         onAcknowledge={acknowledgeAlert}
         onResolve={resolveAlert}
         onReopen={reopenAlert}

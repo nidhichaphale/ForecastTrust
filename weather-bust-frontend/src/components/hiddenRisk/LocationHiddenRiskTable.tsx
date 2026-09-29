@@ -51,7 +51,7 @@ export const LocationHiddenRiskTable: React.FC<LocationHiddenRiskTableProps> = (
     setPage(1)
   }
 
-  const SortIcon = ({ k }: { k: SortKey }) =>
+  const renderSortIcon = (k: SortKey) =>
     sortKey === k ? (
       sortDesc ? (
         <ArrowDown className="w-3 h-3 inline ml-0.5 text-sky-400" />
@@ -97,31 +97,31 @@ export const LocationHiddenRiskTable: React.FC<LocationHiddenRiskTableProps> = (
                   className="text-right px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer"
                   onClick={() => handleSort('zeroSpreadCases')}
                 >
-                  Zero Spread <SortIcon k="zeroSpreadCases" />
+                  Zero Spread {renderSortIcon('zeroSpreadCases')}
                 </th>
                 <th
                   className="text-right px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer"
                   onClick={() => handleSort('zeroForecastCases')}
                 >
-                  Zero Fcst <SortIcon k="zeroForecastCases" />
+                  Zero Fcst {renderSortIcon('zeroForecastCases')}
                 </th>
                 <th
                   className="text-right px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer"
                   onClick={() => handleSort('hiddenRiskBusts')}
                 >
-                  Hidden Busts <SortIcon k="hiddenRiskBusts" />
+                  Hidden Busts {renderSortIcon('hiddenRiskBusts')}
                 </th>
                 <th
                   className="text-right px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer"
                   onClick={() => handleSort('hiddenRiskRate')}
                 >
-                  Failure Rate <SortIcon k="hiddenRiskRate" />
+                  Failure Rate {renderSortIcon('hiddenRiskRate')}
                 </th>
                 <th
                   className="text-right px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer"
                   onClick={() => handleSort('maxObservedRainfall')}
                 >
-                  Max Obs (mm) <SortIcon k="maxObservedRainfall" />
+                  Max Obs (mm) {renderSortIcon('maxObservedRainfall')}
                 </th>
                 <th className="text-right px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 hidden md:table-cell">
                   Latest Event
