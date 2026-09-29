@@ -210,7 +210,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             </div>
             <div className="overflow-hidden">
               <h1 className="text-sm font-bold text-white tracking-tight truncate">
-                Weather Intelligence
+                Weather Lens
               </h1>
               <p className="text-[11px] font-medium text-sky-400/90 truncate">
                 Forecast Bust Detection

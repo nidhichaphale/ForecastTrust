@@ -57,7 +57,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="min-w-0">
           {/* Breadcrumb Context */}
           <nav aria-label="Breadcrumb" className="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-400">
-            <span>Weather Intelligence</span>
+            <span>Weather Lens</span>
             <ChevronRight className="w-3 h-3 text-slate-600" />
             <span>{breadcrumb}</span>
             <ChevronRight className="w-3 h-3 text-slate-600" />

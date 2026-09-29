@@ -31,9 +31,15 @@ export const MapFilters: React.FC<MapFiltersProps> = ({
     setFilters({ ...filters, [key]: value })
   }
 
-  // Force single date selection for the map by tying startDate and endDate to the same value
+  // Force single date selection for the map by tying startDate and endDate to the same value.
+  // Clear leadDay when date is selected to avoid zero-result intersection.
   const handleDateChange = (val: string) => {
-    setFilters({ ...filters, startDate: val, endDate: val })
+    setFilters({ ...filters, startDate: val || undefined, endDate: val || undefined, leadDay: undefined })
+  }
+
+  // When a lead day is selected, clear the date filter so the map shows all dates for that lead day.
+  const handleLeadDayChange = (val: string) => {
+    setFilters({ ...filters, leadDay: val ? parseInt(val, 10) : undefined, startDate: undefined, endDate: undefined })
   }
 
   return (
@@ -76,7 +82,7 @@ export const MapFilters: React.FC<MapFiltersProps> = ({
         <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 mb-1 block">Lead Day</label>
         <Select
           value={filters.leadDay?.toString() || ''}
-          onChange={(e) => updateFilter('leadDay', e.target.value ? parseInt(e.target.value, 10) : undefined)}
+          onChange={(e) => handleLeadDayChange(e.target.value)}
           options={[
             { label: 'All Days', value: '' },
             ...availableLeadDays.map(d => ({ label: `Day ${d}`, value: d.toString() }))
